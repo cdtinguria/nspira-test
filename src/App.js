@@ -1,67 +1,43 @@
 import React from "react";
+import { connect } from "react-redux";
 import logo from "./logo.svg";
 import "./App.css";
+
+import { fetchMovies } from "./actions";
 
 import MovieCard from "./MovieCard";
 
 class App extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      movies: [],
-      pageCount: 1,
-      fetching: false,
-      error: false
-    };
-
     window.addEventListener("scroll", this.onScroll);
   }
 
   async componentDidMount() {
-    this.setState({
-      fetching: true
-    });
-
-    let mvs = await (
-      await fetch(
-        `https://akrp-server.herokuapp.com/movies?p=${this.state.pageCount}`
-      ).catch(() =>
-        this.setState({
-          error: true,
-          fetching: false
-        })
-      )
-    ).json();
-    
-    this.setState({
-      movies: [...this.state.movies, ...mvs],
-      fetching: false,
-      error: false
-    });
+    this.props.fetchMovies();
   }
 
   componentWillUnmount() {
     window.removeEventListener("scroll", this.onScroll);
   }
 
-  onScroll() {
+  onScroll = () => {
     if (
       window.innerHeight + document.documentElement.scrollTop ===
       document.documentElement.offsetHeight
     ) {
-      this.setState({
-        pageCount: this.state.pageCount + 1
-      });
+      this.props.fetchMovies();
     }
   }
 
   render() {
     let movieCards = [];
-    for (let _m of this.state.movies) {
+
+    for (let _m of this.props.movies) {
       movieCards.push(<MovieCard movie={_m} key={_m._id} />);
     }
 
-    if (this.state.fetching)
+    if (this.props.fetching)
       movieCards.push(
         <img src={logo} className="App-logo" alt="logo" key="fetching" />
       );
@@ -126,4 +102,14 @@ class App extends React.Component {
 //   );
 // }
 
-export default App;
+const mapStateToProps = state => ({
+  movies: state.movies,
+  fetching: state.fetching,
+  error: state.error
+});
+
+const mapDispatchToProps = dispatch => ({
+  fetchMovies: () => dispatch(fetchMovies())
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);
