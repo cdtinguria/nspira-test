@@ -1,50 +1,27 @@
 import React from "react";
 import { connect } from "react-redux";
-import logo from "./logo.svg";
+
 import "./App.css";
 
 import { fetchMovies } from "./actions";
 
-import MovieCard from "./MovieCard";
+import MovieList from "./MovieList";
 
 class App extends React.Component {
   constructor(props) {
     super(props);
-    window.addEventListener("scroll", this.onScroll);
-  }
-
-  async componentDidMount() {
-    this.props.fetchMovies();
-  }
-
-  componentWillUnmount() {
-    window.removeEventListener("scroll", this.onScroll);
-  }
-
-  onScroll = () => {
-    if (
-      window.innerHeight + document.documentElement.scrollTop ===
-      document.documentElement.offsetHeight
-    ) {
-      this.props.fetchMovies();
-    }
   }
 
   render() {
-    let movieCards = [];
-
-    for (let _m of this.props.movies) {
-      movieCards.push(<MovieCard movie={_m} key={_m._id} />);
-    }
-
-    if (this.props.fetching)
-      movieCards.push(
-        <img src={logo} className="App-logo" alt="logo" key="fetching" />
-      );
-
     return (
       <div className="container">
-        <div className="row padded">{movieCards}</div>
+        <div className="row padded">
+          <MovieList
+            movies={this.props.movies}
+            fetching={this.props.fetching}
+            fetchMovies={this.props.fetchMovies}
+          />
+        </div>
       </div>
     );
   }
