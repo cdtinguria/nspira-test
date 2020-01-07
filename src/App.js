@@ -38,11 +38,15 @@ function App() {
 
   let movieCards = [];
   for (let _m of movies) {
-    movieCards.push(<MovieCard movie={_m} />);
+    movieCards.push(
+      <MovieCard movie={_m} key={_m._id} />
+    );
   }
 
-  if(fetching)
-    movieCards.push(<img src={logo} className="App-logo" alt="logo" />);
+  if (fetching)
+    movieCards.push(
+      <img src={logo} className="App-logo" alt="logo" key="fetching" />
+    );
 
   return (
     <div className="container">
