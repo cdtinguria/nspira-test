@@ -3,6 +3,7 @@ import ReactDOM from "react-dom";
 import thunkMiddleware from "redux-thunk";
 import { createStore, applyMiddleware } from "redux";
 import { Provider } from "react-redux";
+import { BrowserRouter as Router } from "react-router-dom";
 
 import moviesReducer from "./reducers";
 
@@ -15,9 +16,11 @@ import * as serviceWorker from "./serviceWorker";
 const store = createStore(moviesReducer, applyMiddleware(thunkMiddleware));
 
 ReactDOM.render(
-  <Provider store={store}>
-    <App />
-  </Provider>,
+  <Router>
+    <Provider store={store}>
+      <App />
+    </Provider>
+  </Router>,
   document.getElementById("root")
 );
 

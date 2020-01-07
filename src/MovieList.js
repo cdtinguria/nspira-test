@@ -30,9 +30,10 @@ class MovieList extends React.Component {
   render() {
     let movieCards = [];
 
-    for (let _m of this.props.movies) {
-      movieCards.push(<MovieCard movie={_m} key={_m._id} />);
-    }
+    if (this.props.movies)
+      for (let _m of this.props.movies) {
+        movieCards.push(<MovieCard movie={_m} key={_m._id} selectMovie={this.props.selectMovie} />);
+      }
 
     if (this.props.fetching)
       movieCards.push(

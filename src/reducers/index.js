@@ -1,4 +1,6 @@
-const moviesReducer = (
+import { combineReducers } from "redux";
+
+const moviesList = (
   state = { fetching: false, error: false, movies: [] },
   action
 ) => {
@@ -26,4 +28,34 @@ const moviesReducer = (
   }
 };
 
+const movieDetail = (state = {}, action) => {
+  switch (action.type) {
+    case "REQUEST_MOVIE_DETAIL":
+      return {
+        fetching: true,
+        error: false
+      };
+    case "RECEIVE_MOVIE_DETAIL":
+      return {
+        fetching: false,
+        error: false,
+        detail: action.detail[0]
+      };
+
+    case "RECEIVE_MOVIE_DETAIL_ERROR":
+      return {
+        fetching: false,
+        error: true,
+        detail: {}
+      };
+
+    default:
+      return state;
+  }
+};
+
+const moviesReducer = combineReducers({
+  moviesList,
+  movieDetail
+});
 export default moviesReducer;

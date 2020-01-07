@@ -11,11 +11,8 @@
 
 .card-body {
   background: rgba(0, 0, 0, 0.54);
+  color: rgba(255, 255, 255, 0.87);
   position: absolute;
 	bottom: 0px;
 	width: 100%;
-}
-
-.card-title {
-  color: rgba(255, 255, 255, 0.87);
 }
