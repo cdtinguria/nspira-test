@@ -1,24 +1,52 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import logo from "./logo.svg";
+import "./App.css";
+
+import MovieCard from "./MovieCard";
 
 function App() {
+  let [movies, setMovies] = React.useState([]);
+  let [pageCount, setPageCount] = React.useState(1);
+  let [fetching, setFetching] = React.useState(false);
+
+  async function fetchData() {
+    let mvs = await (
+      await fetch(`https://akrp-server.herokuapp.com/movies?p=${pageCount}`)
+    ).json();
+
+    setFetching(false);
+    setMovies([...movies, ...mvs]);
+  }
+
+  function onScroll() {
+    if (
+      window.innerHeight + document.documentElement.scrollTop ===
+      document.documentElement.offsetHeight
+    ) {
+      setPageCount(pageCount + 1);
+    }
+  }
+
+  React.useEffect(() => {
+    setFetching(true);
+    fetchData();
+    window.addEventListener("scroll", onScroll);
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+    };
+  }, [pageCount]);
+
+  let movieCards = [];
+  for (let _m of movies) {
+    movieCards.push(<MovieCard movie={_m} />);
+  }
+
+  if(fetching)
+    movieCards.push(<img src={logo} className="App-logo" alt="logo" />);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="container">
+      <div className="row padded">{movieCards}</div>
     </div>
   );
 }
